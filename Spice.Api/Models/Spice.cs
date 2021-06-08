@@ -15,8 +15,9 @@ namespace Spice.Api.Models
         public Unit WeightUnit { get; set; }
         public decimal Price { get; set; }        
         public Unit PriceUnit { get; set; }
-        public List<SpiceCharacteristic> SpiceCharacteristics { get; set; }
-        public List<GroupCharacteristic>  GroupCharacteristics { get; set; }
+
+        //public List<SpiceCharacteristic> SpiceCharacteristics { get; set; }
+        //public List<GroupCharacteristic>  GroupCharacteristics { get; set; }
 
 
         //public List<SpiceCharacteristic> NutritionalValues { get; set; }
