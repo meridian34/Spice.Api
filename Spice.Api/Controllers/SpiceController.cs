@@ -58,12 +58,7 @@ namespace Spice.Api.Controllers
         {
             _logger.LogDebug($"{DateTimeOffset.UtcNow} -- Http: HttpPost -- Method: {nameof(AddSpice)}");
             
-            if (spice != null &&
-                spice.Name != null &&
-                spice.Price != 0 &&
-                spice.PriceUnit != null &&
-                spice.Weight != 0 &&
-                spice.WeightUnit != null)
+            if (CheckSpiceData(spice))
             {
                 _logger.LogDebug($"Input data: spice - {spice.Name}");
                 var spices = await _spiceService.GetSpicesAsync();
@@ -87,13 +82,7 @@ namespace Spice.Api.Controllers
         public async Task<IActionResult> UpdateSpice([FromBody] Models.Spice spice)
         {
             _logger.LogDebug($"{DateTimeOffset.UtcNow} -- Http: HttpPut -- Method: {nameof(UpdateSpice)}");
-            if (spice != null &&
-                spice.SpiceID != 0 &&
-                spice.Name != null &&
-                spice.Price != 0 &&
-                spice.PriceUnit != null &&
-                spice.Weight != 0 &&
-                spice.WeightUnit != null)
+            if (CheckSpiceData(spice))
             {
                 _logger.LogDebug($"Input data: spice - {spice.Name}");
                 var spices = await _spiceService.GetSpicesAsync();
@@ -118,6 +107,19 @@ namespace Spice.Api.Controllers
             return BadRequest(new { ErrorMessage = "Add not posible. Bad spice properties!" });
         }
 
+        private bool CheckSpiceData(Models.Spice spice)
+        {
+            if(spice != null &&                
+                spice.Name != null &&
+                spice.Price != 0 &&
+                spice.PriceUnit != null &&
+                spice.Weight != 0 &&
+                spice.WeightUnit != null)
+            {
+                return true;
+            }
+            return false;
+        }
 
         [HttpDelete]
         public async Task<IActionResult> DeleteSpice([FromBody] Models.Spice spice)
@@ -126,7 +128,7 @@ namespace Spice.Api.Controllers
             if (spice != null &&
                 spice.SpiceID != 0 )
             {
-                await DeleteSpiceById(spice.SpiceID);
+                return await DeleteSpiceById(spice.SpiceID);
             }
             return BadRequest(new { ErrorMessage = "Add not posible. Bad spice properties!" });
         }
