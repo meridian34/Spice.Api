@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Spice.Api.Services.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Spice.Api.Services.Interfaces;
 
 namespace Spice.Api.Controllers
 {
@@ -26,9 +26,8 @@ namespace Spice.Api.Controllers
         public async Task<IEnumerable<Models.Spice>> Get()
         {
             _logger.LogDebug($"{DateTimeOffset.UtcNow} -- Http: HttpGet -- Method: {nameof(Get)}");
-            return await _spiceService.GetSpicesAsync();            
+            return await _spiceService.GetSpicesAsync();
         }
-
 
         [HttpGet]
         [Route("/[controller]/{id}")]
@@ -39,43 +38,31 @@ namespace Spice.Api.Controllers
             return await GetSpiceById(id);
         }
 
-        private async Task<IActionResult> GetSpiceById(int spiceId)
-        {
-            var spices = await _spiceService.GetSpicesAsync();
-            var spice = spices.Where((s) => s.SpiceID == spiceId).FirstOrDefault();
-            if (spice != null)
-            {
-                return Ok(spice);
-            }
-            else
-            {
-                return BadRequest(new { ErrorMessage = "Not found spice" });
-            }
-        }
-
         [HttpPost]
         public async Task<IActionResult> AddSpice([FromBody] Models.Spice spice)
         {
             _logger.LogDebug($"{DateTimeOffset.UtcNow} -- Http: HttpPost -- Method: {nameof(AddSpice)}");
-            
             if (CheckSpiceData(spice))
             {
                 _logger.LogDebug($"Input data: spice - {spice.Name}");
                 var spices = await _spiceService.GetSpicesAsync();
                 var id = -1;
-                foreach(var item in spices)
+
+                foreach (var item in spices)
                 {
-                    if(item.SpiceID > id)
+                    if (item.SpiceID > id)
                     {
                         id = item.SpiceID;
                     }
                 }
+
                 spice.SpiceID = ++id;
                 await _spiceService.AddSpiceAsync(spice);
                 return Ok();
             }
+
             _logger.LogDebug($"Input data: spice = null");
-            return BadRequest(new { ErrorMessage = "Add not posible. Bad spice properties!" });            
+            return BadRequest(new { ErrorMessage = "Add not posible. Bad spice properties!" });
         }
 
         [HttpPut]
@@ -103,13 +90,27 @@ namespace Spice.Api.Controllers
                     return BadRequest(new { ErrorMessage = "Not found spice for update" });
                 }
             }
+
             _logger.LogDebug($"Input data: spice = null");
+            return BadRequest(new { ErrorMessage = "Add not posible. Bad spice properties!" });
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteSpice([FromBody] Models.Spice spice)
+        {
+            _logger.LogDebug($"{DateTimeOffset.UtcNow} -- Http: HttpPut -- Method: {nameof(UpdateSpice)}");
+            if (spice != null &&
+                spice.SpiceID != 0)
+            {
+                return await DeleteSpiceById(spice.SpiceID);
+            }
+
             return BadRequest(new { ErrorMessage = "Add not posible. Bad spice properties!" });
         }
 
         private bool CheckSpiceData(Models.Spice spice)
         {
-            if(spice != null &&                
+            if (spice != null &&
                 spice.Name != null &&
                 spice.Price != 0 &&
                 spice.PriceUnit != null &&
@@ -118,19 +119,22 @@ namespace Spice.Api.Controllers
             {
                 return true;
             }
+
             return false;
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteSpice([FromBody] Models.Spice spice)
+        private async Task<IActionResult> GetSpiceById(int spiceId)
         {
-            _logger.LogDebug($"{DateTimeOffset.UtcNow} -- Http: HttpPut -- Method: {nameof(UpdateSpice)}");
-            if (spice != null &&
-                spice.SpiceID != 0 )
+            var spices = await _spiceService.GetSpicesAsync();
+            var spice = spices.Where((s) => s.SpiceID == spiceId).FirstOrDefault();
+            if (spice != null)
             {
-                return await DeleteSpiceById(spice.SpiceID);
+                return Ok(spice);
             }
-            return BadRequest(new { ErrorMessage = "Add not posible. Bad spice properties!" });
+            else
+            {
+                return BadRequest(new { ErrorMessage = "Not found spice" });
+            }
         }
 
         private async Task<IActionResult> DeleteSpiceById(int id)
@@ -149,7 +153,5 @@ namespace Spice.Api.Controllers
                 return BadRequest(new { ErrorMessage = "Not found spice for delete" });
             }
         }
-
-
     }
 }

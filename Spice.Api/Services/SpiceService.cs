@@ -1,15 +1,14 @@
-﻿using Spice.Api.Models;
-using Spice.Api.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Spice.Api.Models;
+using Spice.Api.Services.Interfaces;
 
 namespace Spice.Api.Services
 {
     public class SpiceService : ISpiceService
     {
         private readonly List<Models.Spice> _spices;
+
         public SpiceService()
         {
             var priceUnit = new Unit { UnitId = 0, Value = "UAH" };
@@ -19,7 +18,7 @@ namespace Spice.Api.Services
         }
 
         public async Task<IReadOnlyCollection<Models.Spice>> GetSpicesAsync()
-        {   
+        {
             return await Task.FromResult(_spices);
         }
 
@@ -29,9 +28,9 @@ namespace Spice.Api.Services
             await Task.FromResult(true);
         }
 
-        public async Task DeleteSpiceAsync(int SpiceId)
+        public async Task DeleteSpiceAsync(int spiceId)
         {
-            var res = _spices.Find((spice) => { return spice.SpiceID == SpiceId; });
+            var res = _spices.Find((spice) => { return spice.SpiceID == spiceId; });
             _spices.Remove(res);
             await Task.FromResult(true);
         }

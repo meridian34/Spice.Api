@@ -1,7 +1,4 @@
-using Spice.Api.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Spice.Api.Services.Interfaces
@@ -12,6 +9,6 @@ namespace Spice.Api.Services.Interfaces
 
         Task AddSpiceAsync(Models.Spice spice);
 
-        Task DeleteSpiceAsync(int SpiceId);
+        Task DeleteSpiceAsync(int spiceId);
     }
 }
