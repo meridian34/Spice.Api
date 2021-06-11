@@ -35,7 +35,21 @@ namespace Spice.Website.Controllers
             ViewBag.Spices = (await _serv.GetSpicesAsync());
             return View();
         }
+        public IActionResult AddSpice()
+        {
+            return View();
+        }
 
+        [HttpPost]
+        public IActionResult AddSpice(string name, decimal price, double weight)
+        {
+            var s = new Spice.Website.Models.Spice();
+            s.Name = name;
+            s.Price = price;
+            s.Weight = weight;
+            _serv.AddSpiceAsync(s);
+            return View();
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
