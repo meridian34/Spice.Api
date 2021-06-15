@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -9,24 +10,26 @@ using Spice.Api.Services.Interfaces;
 
 namespace Spice.Api.Controllers
 {
+    [EnableCors("AllowAllOrigin")]
     [Route("[controller]")]
     [ApiController]
-    public class SpiceController : ControllerBase
+    public class SpiceBFFController : ControllerBase
     {
-        private readonly ILogger<SpiceController> _logger;
+        private readonly ILogger<SpiceBFFController> _logger;
         private readonly ISpiceService _spiceService;
 
-        public SpiceController(ILogger<SpiceController> logger, ISpiceService spiceService)
+        public SpiceBFFController(ILogger<SpiceBFFController> logger, ISpiceService spiceService)
         {
             _logger = logger;
             _spiceService = spiceService;
         }
 
-        [HttpGet]
+        [HttpGet]        
         public async Task<IEnumerable<Models.Spice>> Get()
         {
             _logger.LogDebug($"{DateTimeOffset.UtcNow} -- Http: HttpGet -- Method: {nameof(Get)}");
-            return await _spiceService.GetSpicesAsync();
+            var t =  await _spiceService.GetSpicesAsync();
+            return t;
         }
 
         [HttpGet]
@@ -35,7 +38,7 @@ namespace Spice.Api.Controllers
         {
             _logger.LogDebug($"{DateTimeOffset.UtcNow} -- Http: HttpGet -- Method: {nameof(GetByDataFromRoute)}");
             _logger.LogDebug($"Input data: Id - {id}");
-            return await GetSpiceById(id);
+            return  await GetSpiceById(id);
         }
 
         [HttpPost]
