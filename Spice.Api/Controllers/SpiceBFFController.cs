@@ -115,10 +115,8 @@ namespace Spice.Api.Controllers
         {
             if (spice != null &&
                 spice.Name != null &&
-                spice.Price != 0 &&
-                spice.PriceUnit != null &&
-                spice.Weight != 0 &&
-                spice.WeightUnit != null)
+                spice.Price != 0 &&                
+                spice.Weight != 0) 
             {
                 return true;
             }
